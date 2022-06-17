@@ -13,7 +13,7 @@
 ### Запуск через docker-compose
 
 1. С клонируйте репозиторий:
-   - `git clone https://github.com/demetrous-fd/Grasscutter.git`
+   - `git clone https://github.com/Demetrous-fd/GATW`
 2. Перейдите в папку репозитория
 3. Создайте _.env_ по образцу _.env.example_ и установите свои переменные окружения (`не используйте @ в переменных для postgres`) 
 4. Для запуска проекта выполните:
