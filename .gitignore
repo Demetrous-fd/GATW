@@ -1,1 +1,6 @@
 /venv/
+/.env
+/.idea
+/.pytest_cache/
+/backend/tests/.pytest_cache/
+/data/

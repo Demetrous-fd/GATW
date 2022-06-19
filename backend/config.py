@@ -1,12 +1,13 @@
-from socket import gethostbyname
-
-from pydantic import BaseSettings, Field, root_validator, AnyHttpUrl, validator, IPvAnyAddressError, IPvAnyAddress
+from pydantic import BaseSettings, Field, root_validator, AnyHttpUrl
 
 
 class Settings(BaseSettings):
     APP_HOST: str = Field("127.0.0.1")
     APP_PORT: int = Field(3000)
     APP_CORS_ORIGINS: list[AnyHttpUrl] = Field(["http://localhost"])
+    APP_SECRET_KEY: str = Field("d93bf836fe1b9ef571a55af686080dac3b0b571ae5ab59f2b890bfbd86b4fc1e")
+    APP_DEFAULT_USER: str = Field("Admin")
+    APP_DEFAULT_PASSWORD: str = Field("P@ssword")
 
     POSTGRES_HOST: str = Field("127.0.0.1")
     POSTGRES_PORT: int = Field(5432)
@@ -26,7 +27,8 @@ class Settings(BaseSettings):
     @root_validator()
     def root_validation(cls, values):
         if values["TESTING"]:
-            values['POSTGRES_DATABASE'] = f"{values['POSTGRES_DATABASE']}_test"
+            values["APP_PORT"] = values["APP_PORT"] + 1
+            values["POSTGRES_DATABASE"] = f"{values['POSTGRES_DATABASE']}_test"
         if values["POSTGRES_URL"] is None:
             values["POSTGRES_URL"] = f"postgresql://{values['POSTGRES_USER']}:{values['POSTGRES_PASSWORD']}" \
                                      f"@{values['POSTGRES_HOST']}:{values['POSTGRES_PORT']}" \

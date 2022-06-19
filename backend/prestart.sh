@@ -9,4 +9,5 @@ echo "Create access_key and secret_key for minio"
 ./mc admin policy set myminio readwrite user=${MINIO_ACCESS_KEY}
 
 echo "Run migration"
+alembic upgrade b91b0987b75d
 alembic upgrade head
