@@ -1,9 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi.responses import FileResponse
 
 from backend.security import fastapi_users, auth_backend, current_admin
 from backend.schemes.users import UserRead, UserUpdate, UserCreate
-from fastapi import Depends
-from fastapi.openapi.docs import get_swagger_ui_html
 
 router = APIRouter()
 
@@ -22,3 +21,7 @@ router.include_router(
     tags=["users"],
 )
 
+
+@router.get("/login", include_in_schema=False)
+def get_docs():
+    return FileResponse("backend/static/index.html")

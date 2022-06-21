@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body class="container">
+<div class="login-form">
+    <div class="container">
+        <img src="/static/resources/zRYOw45UayQ.jpg"
+             width="128" height="128" class="maring_right">
+        <h1>Login in to Swagger</h1>
+    </div>
+    <hr class="margin_top">
+    <div>
+        <label>Username: </label>
+        <input id="username" required class="input_block small_border"/>
+    </div>
+    <label>Password: </label>
+    <input type="password" id="password" required class="input_block small_border"/>
+    <button onclick="login()" id="submit" class="btn small_border">Login</button>
+    <a id="error" class="error"></a>
+</div>
+<script>
+    function validate(input) {
+        if (!input.checkValidity()) {
+            if (!input.className.includes("invalid"))
+                input.className = input.className + " invalid"
+            return false
+        } else {
+            input.className = input.className.replace("invalid", "")
+            return true
+        }
+    }
+
+    function login() {
+        const usernameInput = document.getElementById("username")
+        const passwordInput = document.getElementById("password")
+
+        const user_validation = validate(usernameInput)
+        const pass_validation = validate(passwordInput)
+        if (user_validation && pass_validation) {
+            const formData = new FormData()
+            formData.append("username", usernameInput.value)
+            formData.append("password", passwordInput.value)
+            fetch("/auth/jwt/login", {
+                method: 'post',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    document.getElementById("error").innerText = "Invalid username or password"
+                    return null
+                }
+            }).then(data => {
+                if (data) {
+                    const now = new Date();
+                    const time = now.getTime();
+                    const expireTime = time + 3600 * 1000;
+                    now.setTime(expireTime);
+                    document.cookie = `access_token=${data["access_token"]};expires=${now.toUTCString()}`
+                    window.location.href = "/docs"
+                }
+            })
+        }
+    }
+
+    var input = document.getElementById("password");
+
+    input.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("submit").click();
+        }
+    });
+</script>
+</body>
+</html>
